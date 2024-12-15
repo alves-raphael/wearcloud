@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\GenerateApparelsReport;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

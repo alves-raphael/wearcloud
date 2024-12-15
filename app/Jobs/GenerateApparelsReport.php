@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Storage;
 
 class GenerateApparelsReport implements ShouldQueue
 {
@@ -15,11 +16,21 @@ class GenerateApparelsReport implements ShouldQueue
 
     public function handle(): void
     {
-        sleep(5);
-        $file = fopen(storage_path('app/apparels-report.txt'), 'w');
-        $now = now()->toDateTimeString();
-        fwrite($file, "Apparels Report\n");
-        fwrite($file, $now);
+        $apparels = Apparel::all()->toArray();
+        $file = fopen('php://temp', 'r+');
+        fputcsv($file, ['ID', 'Name', 'Description', 'Company ID', 'Created At', 'Updated At']);
+        foreach ($apparels as $apparel) {
+            fputcsv($file, $apparel);
+        }
+        fputcsv($file, ['Total: ', count($apparels)]);
+        fputcsv($file, ['Created at: ', now()->toDateTimeString()]);
+        rewind($file);
+        $filename = 'exports/apparels_' . now()->format('Y_m_d_H_i_s') . '.csv';
+        try{
+            Storage::disk('s3')->put($filename, $file);
+        }catch (\Exception $e) {
+            logger($e->getMessage());
+        }
         fclose($file);
     }
 }
