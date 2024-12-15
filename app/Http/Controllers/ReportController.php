@@ -11,6 +11,6 @@ class ReportController extends Controller
     public function apparels(Request $request): Response
     {
         GenerateApparelsReport::dispatch();
-        return response()->json(['message' => 'CSV file uploaded to Minio successfully'], 200);
+        return redirect()->back()->with('message', __('reports.request_feedback'));
     }
 }
