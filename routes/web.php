@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/reports/apparels', [ReportController::class, 'apparels'])->name('reports.apparels');
     Route::get('/dashboard', fn() => view('dashboard'))->middleware(middleware: ['verified'])->name('dashboard'); 
-    Route::get('/reports', fn() => view('reports'))->name('reports'); 
+    Route::get('/reports', [ReportController::class, 'list'])->name('reports'); 
 });
 
 Route::middleware('auth')->group(function () {

@@ -17,6 +17,12 @@
                     <x-nav-link :href="route('reports.apparels')">
                         {{ __('buttons.generate_apparels_report') }}
                     </x-nav-link>
+                    <h2>Relatórios de peças</h2>
+                    <ul>
+                        @foreach($reports as $report)
+                            <li>{{ $report }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>
